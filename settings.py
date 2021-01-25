@@ -12,5 +12,6 @@ class Settings:
         self.root_folders_list = None
         self.choosed_root_folder = None
         self.sub_root_folders_list = None
-        
+        self.choosed_sub_folder = None
+        self.mails_list = None
         

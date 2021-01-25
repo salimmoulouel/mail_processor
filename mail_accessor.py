@@ -4,6 +4,7 @@ from tkinter import messagebox
 import imapclient
 from imapclient.exceptions import LoginError
 from socket import gaierror
+import pyzmail
 class Mail_Accessor:
     """class that allow acess to mail"""
     def __init__(self,processor ):
@@ -36,6 +37,7 @@ class Mail_Accessor:
     def _show_folders(self):
         """show a list of folders present inside the root folder of the mail box"""
         folders_list =self._list_folders()
+        #self.settings.root_folders_list.delete(0,'end')
         self.settings.root_folders_list.insert(0, *folders_list) 
     
     def _list_folders(self):
@@ -49,16 +51,44 @@ class Mail_Accessor:
         
     def show_root_folder_content(self,event):
         self.settings.choosed_root_folder = self.settings.root_folders_list.get(self.settings.root_folders_list.curselection())       
+        #import pdb;pdb.set_trace()
         sub_folders_list=self.imapObj.select_folder(self.settings.choosed_root_folder, readonly=True)
-        self.settings.sub_root_folders_list.insert(0, *sub_folders_list[b'FLAGS']) 
-        import pdb;pdb.set_trace()
-    
+        #import pdb;pdb.set_trace()
+        sub_folders_list=list(sub_folders_list[b'FLAGS'])
+        #import pdb;pdb.set_trace()
+        
+        sub_folders_list=[mot.decode().lstrip("\\") for mot in sub_folders_list]
+        self.settings.sub_root_folders_list.delete(0,"end")
+        #import pdb;pdb.set_trace()
+        self.settings.sub_root_folders_list.insert(0, *sub_folders_list) 
+        #import pdb;pdb.set_trace()
+        
         #if (disconnected):
             #reconnect
         #try interact
         #catch reconnect
         
+    def get_mail_from_folder(self,event):
+        self.settings.choosed_sub_folder = self.settings.sub_root_folders_list.get(self.settings.sub_root_folders_list.curselection())       
         
+        #import pdb;pdb.set_trace()
+        UIDs=self.imapObj.search(self.settings.choosed_sub_folder)
+        #import pdb;pdb.set_trace()
+        
+        for message in UIDs[:3]:
+            rawMessage = self.imapObj.fetch(message, [b'BODY[]',b'FLAGS'])
+            message=pyzmail.PyzMessage.factory(rawMessage[message][b'BODY[]'])
+            
+            sujet=message.get_subject()
+            de=message.get_addresses('from')
+            
+            date_mail=message.get_all("date")
+            #import pdb;pdb.set_trace()
+            
+            head_mail="   ".join([em[1] for em in de])+date_mail[0]+"   "+ sujet
+            
+            self.settings.mails_list.insert(0,head_mail)
+            #message = pyzmail.PyzMessage.factory(coded_message)
         
     def check_mails(self):
         folders_list=self._list_folders()

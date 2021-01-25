@@ -69,7 +69,7 @@ class Window:
 
         ttk.Label(self.left_side, text="mot de passe", anchor="center").grid(row=2,column=0,  sticky="nsew")
         self.settings.mdp = tk.StringVar()
-        self.settings.mdp.set("Smoul25082015")
+        self.settings.mdp.set("Smoul2508")
 
         feet_entry = ttk.Entry(self.left_side, textvariable=self.settings.mdp,width=50)
         feet_entry.grid(row=2, column=1,  sticky="nsew")
@@ -85,7 +85,15 @@ class Window:
         ttk.Label(self.left_side, text="list des sous dossiers",anchor="center").grid(row=5,column=0,pady=5,sticky="nsew")
         self.settings.sub_root_folders_list=tk.Listbox(self.left_side)
         self.settings.sub_root_folders_list.grid(row=5,column=1,pady=5,sticky="nsew")
+        self.settings.sub_root_folders_list.bind('<ButtonRelease-1>', self.program.mail_acessor.get_mail_from_folder)
+
         
+        #ttk.Label(self.left_side, text="list des mails",anchor="center").grid(row=6,column=0,pady=5,sticky="nsew")
+        self.settings.mails_list=tk.Listbox(self.left_side)
+        self.settings.mails_list.grid(row=6,column=0,columnspan=2,pady=5,sticky="nsew")
+        scrollbarx = tk.Scrollbar(self.left_side, orient=tk.HORIZONTAL)
+        scrollbarx.config(command=self.settings.mails_list.xview)
+        scrollbarx.grid(row=7,columnspan=2,sticky="swe")
     
     def _right_side_instantiate(self):
         """ instantiation of the right side of main window"""
