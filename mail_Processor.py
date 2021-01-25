@@ -20,6 +20,8 @@ def check_mails():
             rep_valid=True
     
     imapObj.select_folder(response, readonly=True)
+    
+    
     UIDs = imapObj.search('SEEN')
         
 

@@ -1,10 +1,15 @@
+from processor import Processor
+from settings import Settings
 import tkinter as tk
 from tkinter import ttk
 
 
 class Window:
-    def __init__(self):
+    def __init__(self,processor : Processor):
+        self.program=processor
+        self.settings= self.program.settings
         self._instantiate_screen()
+        
         
     def _instantiate_screen(self):
         """instantiation of the screen"""
@@ -37,21 +42,27 @@ class Window:
          #instantiation de la fenetre de gauche qui contiendra les boutons
         self.left_side= ttk.Frame(self.mainframe)
         self.left_side.grid(row=0,column=0, sticky="nsew")
-        #self.left_side.columnconfigure(0, weight=1)
-        #self.left_side.rowconfigure(0, weight=1)
+        self._information_serveur_instantiate()    
         
+        
+    def _information_serveur_instantiate(self):
+        """instantiate widgets for serveur information outpout"""
         ttk.Label(self.left_side, text="choisisez le serveur de messagerie").grid(column=0, row=0, sticky="nw")
-        serveur_choices = ['Outlook', 'Gmail']
-        self.choosed_serveur = tk.StringVar()
-        self.choosed_serveur.set('GB')
+        serveur_choices = list(self.settings.serveurs.keys())
+        self.settings.choosed_serveur = tk.StringVar()
+        self.settings.choosed_serveur.set('Outlook')
+        tk.OptionMenu(self.left_side, self.settings.choosed_serveur, *serveur_choices).grid(row=0,column=1,columnspan=2,sticky="n")
         
         ttk.Label(self.left_side, text="adresse e-mail").grid(row=1,column=0, sticky="nw")
-        
+        self.settings.email = tk.StringVar()
+        feet_entry = ttk.Entry(self.left_side, textvariable=self.settings.email,width=50)
+        feet_entry.grid(row=1, column=1,  sticky="nsew")
         ttk.Label(self.left_side, text="mot de passe").grid(row=2,column=0,  sticky="nw")
-        
-        
-
-        tk.OptionMenu(self.left_side, self.choosed_serveur, *serveur_choices).grid(row=0,column=1,sticky="n")
+        self.settings.mdp = tk.StringVar()
+        feet_entry = ttk.Entry(self.left_side, textvariable=self.settings.mdp,width=50)
+        feet_entry.grid(row=2, column=1,  sticky="nsew")
+    
+    
     def _right_side_instantiate(self):
         """ instantiation of the right side of main window"""
         self.right_side= ttk.Frame(self.mainframe)
