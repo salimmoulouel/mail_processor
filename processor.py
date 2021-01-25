@@ -7,8 +7,11 @@ class Processor:
         self.window=wd.Window(self)
         
     def launch(self):
+        """launch the program"""
         self.window.launch()
-        self.mail_acessor=Mail_Accessor(self)
+        
+        self.mail_acessor=None
+        
 if __name__ == "__main__" :
     program=Processor()
     program.launch()     

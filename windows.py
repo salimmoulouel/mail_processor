@@ -1,3 +1,4 @@
+
 from processor import Processor
 from settings import Settings
 import tkinter as tk
@@ -57,9 +58,13 @@ class Window:
         self.settings.email = tk.StringVar()
         feet_entry = ttk.Entry(self.left_side, textvariable=self.settings.email,width=50)
         feet_entry.grid(row=1, column=1,  sticky="nsew")
+
         ttk.Label(self.left_side, text="mot de passe").grid(row=2,column=0,  sticky="nw")
         self.settings.mdp = tk.StringVar()
         feet_entry = ttk.Entry(self.left_side, textvariable=self.settings.mdp,width=50)
+        feet_entry.grid(row=2, column=1,  sticky="nsew")
+        
+        ttk.Button(self.left_side, text="Connect", command=self._connect).grid(column=3, row=3, sticky="w")
         feet_entry.grid(row=2, column=1,  sticky="nsew")
     
     
@@ -84,6 +89,10 @@ class Window:
     
     
     
+    def _connect(self):
+        self.program.mail_acessor=Mail_Accessor(self.program)
         
     def launch(self):
         self.root.mainloop()
+        
+from mail_accessor import Mail_Accessor
