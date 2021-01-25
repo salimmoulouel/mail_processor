@@ -74,12 +74,17 @@ class Window:
         feet_entry = ttk.Entry(self.left_side, textvariable=self.settings.mdp,width=50)
         feet_entry.grid(row=2, column=1,  sticky="nsew")
         
-        ttk.Button(self.left_side, text="Connect", command=self._connect).grid(column=1, row=3, sticky="nsew")
+        ttk.Button(self.left_side, text="Connect", command=self.program.mail_acessor.init_connection).grid(column=1, row=3, sticky="nsew")
         feet_entry.grid(row=2, column=1,  sticky="nsew")
         
         ttk.Label(self.left_side, text="list des dossiers",anchor="center").grid(row=4,column=0,pady=5,sticky="nsew")
         self.settings.root_folders_list=tk.Listbox(self.left_side)
         self.settings.root_folders_list.grid(row=4,column=1,pady=5,sticky="nsew")
+        self.settings.root_folders_list.bind('<ButtonRelease-1>', self.program.mail_acessor.show_root_folder_content)
+
+        ttk.Label(self.left_side, text="list des sous dossiers",anchor="center").grid(row=5,column=0,pady=5,sticky="nsew")
+        self.settings.sub_root_folders_list=tk.Listbox(self.left_side)
+        self.settings.sub_root_folders_list.grid(row=5,column=1,pady=5,sticky="nsew")
         
     
     def _right_side_instantiate(self):

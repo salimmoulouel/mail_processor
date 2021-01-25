@@ -1,3 +1,4 @@
+
 import tkinter as tk
 
 
@@ -9,4 +10,7 @@ class Settings:
         self.email = None
         self.mdp= None
         self.root_folders_list = None
+        self.choosed_root_folder = None
+        self.sub_root_folders_list = None
+        
         
