@@ -8,4 +8,5 @@ class Settings:
         self.choosed_serveur = None
         self.email = None
         self.mdp= None
+        self.root_folders_list = None
         

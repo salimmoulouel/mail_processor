@@ -21,7 +21,9 @@ class Mail_Accessor:
             #import pdb;pdb.set_trace()
             retour = self.imapObj.login(login, mdp)
             messagebox.showinfo("sucess", retour)
-
+            folders_list =self._list_folders()
+            #import pdb;pdb.set_trace()
+            self.settings.root_folders_list.insert(0, *folders_list) 
         except gaierror as e:
             #erreur de serveur
             messagebox.showinfo("connection error", "veuillez mettre un nom de serveur imap correct")
@@ -29,7 +31,7 @@ class Mail_Accessor:
         except LoginError as e:
             # erreur de login ou mdp
             messagebox.showinfo("connection error", "login ou mot de passe incorrect")
-
+            
     def _list_folders(self):
         """ get the list of folders inside the root mail box dir"""
         folders_list = self.imapObj.list_folders()
