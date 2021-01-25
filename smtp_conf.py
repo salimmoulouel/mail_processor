@@ -7,9 +7,10 @@ smtpObj.starttls()
 
 smtpObj.login('salimmouloueletude@outlook.fr', 'Smoul25082015')
  
-str_send_mail='''Subject: testin'...\n
-... This is a test '''
-smtpObj.sendmail("salimmouloueletude@outlook.fr","salim.moulouel@gmail.com",str_send_mail) 
+str_send_mail="""Subject: testin'...\n
+izanus"""
+#... This is a test '''
+self.smtpObj.sendmail("salimmouloueletude@outlook.fr","salim.moulouel@gmail.com",str_send_mail) 
 smtpObj.quit()
 
                 

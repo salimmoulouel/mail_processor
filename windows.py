@@ -3,7 +3,7 @@ from processor import Processor
 from settings import Settings
 import tkinter as tk
 from tkinter import ttk
-
+import tkinterhtml as tkh
 
 class Window:
     def __init__(self,processor : Processor):
@@ -56,7 +56,7 @@ class Window:
     def _information_serveur_instantiate(self):
         """instantiate widgets for serveur information outpout"""
         ttk.Label(self.left_side, text="choisisez le serveur de messagerie",anchor="center").grid(column=0, row=0, sticky="nsew")
-        serveur_choices = list(self.settings.serveurs.keys())
+        serveur_choices = list(self.settings.serveurs_imap.keys())
         self.settings.choosed_serveur = tk.StringVar()
         self.settings.choosed_serveur.set('Outlook')
         tk.OptionMenu(self.left_side, self.settings.choosed_serveur, *serveur_choices).grid(row=0,column=1,sticky="nsew")
@@ -75,7 +75,7 @@ class Window:
         feet_entry.grid(row=2, column=1,  sticky="nsew")
         
         ttk.Button(self.left_side, text="Connect", command=self.program.mail_acessor.init_connection).grid(column=1, row=3, sticky="nsew")
-        feet_entry.grid(row=2, column=1,  sticky="nsew")
+        
         
         ttk.Label(self.left_side, text="list des dossiers",anchor="center").grid(row=4,column=0,pady=5,sticky="nsew")
         self.settings.root_folders_list=tk.Listbox(self.left_side)
@@ -85,7 +85,7 @@ class Window:
         ttk.Label(self.left_side, text="list des sous dossiers",anchor="center").grid(row=5,column=0,pady=5,sticky="nsew")
         self.settings.sub_root_folders_list=tk.Listbox(self.left_side)
         self.settings.sub_root_folders_list.grid(row=5,column=1,pady=5,sticky="nsew")
-        self.settings.sub_root_folders_list.bind('<ButtonRelease-1>', self.program.mail_acessor.get_mail_from_folder)
+        self.settings.sub_root_folders_list.bind('<ButtonRelease-1>', self.program.mail_acessor.get_mails_from_folder)
 
         
         #ttk.Label(self.left_side, text="list des mails",anchor="center").grid(row=6,column=0,pady=5,sticky="nsew")
@@ -94,7 +94,8 @@ class Window:
         scrollbarx = tk.Scrollbar(self.left_side, orient=tk.HORIZONTAL)
         scrollbarx.config(command=self.settings.mails_list.xview)
         scrollbarx.grid(row=7,columnspan=2,sticky="swe")
-    
+        self.settings.mails_list.bind('<ButtonRelease-1>', self.program.mail_acessor.show_mail)
+
     def _right_side_instantiate(self):
         """ instantiation of the right side of main window"""
         self.right_side= ttk.Frame(self.mainframe)
@@ -105,7 +106,8 @@ class Window:
         
         
         #instantiation du text de la fenetre de droite
-        self.text_mail = tk.Text(self.right_side)
+        #self.text_mail = tkh.HtmlFrame(self.right_side) 
+        self.text_mail=tk.Text(self.right_side)
         self.text_mail.grid(row=0,column=0, sticky="nsew")#le text prend tout la fenetre (scroll bar sera ajouté automatiquement à coté)
 
         #instantiation de la barre glissante
@@ -115,6 +117,10 @@ class Window:
         self.boutons_mail = ttk.Frame(self.right_side)
         self.boutons_mail.grid(row=1, sticky="nsew")
     
+        
+        ttk.Button(self.boutons_mail, text="Positif", command=self.program.mail_acessor.send_pos_response).grid(column=1, row=1, sticky="nsew")
+        ttk.Button(self.boutons_mail, text="Negatif", command=self.program.mail_acessor.send_neg_response).grid(column=2, row=1, sticky="nsew")
+        
     
     
     def _connect(self):

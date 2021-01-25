@@ -40,7 +40,7 @@ def calculate(*args):
         
 #        meters.set(contenu_message)
         T.delete("0.0",END)
-        T.insert("0.0", contenu_message)
+        T.set_content("0.0", contenu_message)
         print(contenu_message)
         i+=1
         
