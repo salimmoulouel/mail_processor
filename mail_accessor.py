@@ -1,5 +1,6 @@
 
 import os
+import re
 import tkinter as tk
 from tkinter import messagebox
 import webbrowser
@@ -77,35 +78,42 @@ class Mail_Accessor:
         #try interact
         #catch reconnect
         
-    def get_mails_from_folder(self,event):
+    
+    def get_mails_from_folder(self,event=None):
         self.settings.choosed_sub_folder = self.settings.sub_root_folders_list.get(self.settings.sub_root_folders_list.curselection())       
         
         #import pdb;pdb.set_trace()
         self.UIDs=self.imapObj.search(self.settings.choosed_sub_folder)
         #import pdb;pdb.set_trace()
-        
-        for message in self.UIDs[:10]:
+        self.settings.id_mail=0
+        self.mail_header()
+    
+    def mail_header(self):
+        self.settings.mails_list.delete(0,"end")
+
+        for message in self.UIDs[self.settings.id_mail:self.settings.id_mail+10]:
+            #import pdb;pdb.set_trace()
             rawMessage = self.imapObj.fetch(message, [b'BODY[]',b'FLAGS'])
-            message=pyzmail.PyzMessage.factory(rawMessage[message][b'BODY[]'])
+            message_content=pyzmail.PyzMessage.factory(rawMessage[message][b'BODY[]'])
             
-            sujet=message.get_subject()
-            de=message.get_addresses('from')
+            sujet=message_content.get_subject()
+            de=message_content.get_addresses('from')
             
-            date_mail=message.get_all("date")
+            date_mail=message_content.get_all("date")
             #import pdb;pdb.set_trace()
             
-            head_mail="   ".join([em[1] for em in de])+date_mail[0]+"   "+ sujet
+            head_mail="   ".join([em[1] for em in de])+date_mail[0]+"   "+ sujet+ "UID : "+str(message)
             
             self.settings.mails_list.insert("end",head_mail)
             #message = pyzmail.PyzMessage.factory(coded_message)
             
     def show_mail(self,event):
-        self.settings.choosed_mails = self.settings.mails_list.index(self.settings.mails_list.curselection())   
-            
+        self.settings.choosed_mail = self.settings.mails_list.get(self.settings.mails_list.curselection())   
+        uid_getter=re.compile("(UID : )(\d+)")
+        self.settings.choosed_mail=int(uid_getter.findall(self.settings.choosed_mail)[0][1])
         
-        choosed_mail=self.settings.mails_list.index(self.settings.choosed_mails)
-        rawMessage = self.imapObj.fetch(self.UIDs[choosed_mail], [b'BODY[]',b'FLAGS'])
-        message=pyzmail.PyzMessage.factory(rawMessage[self.UIDs[choosed_mail]][b'BODY[]'])
+        rawMessage = self.imapObj.fetch(self.settings.choosed_mail, [b'BODY[]',b'FLAGS'])
+        message=pyzmail.PyzMessage.factory(rawMessage[self.settings.choosed_mail][b'BODY[]'])
         if message.html_part != None:
             contenu_message=message.html_part.get_payload().decode(message.html_part.charset)
             with open("html_renderer.html", 'w') as f:
@@ -134,12 +142,11 @@ class Mail_Accessor:
         positif_mail='''Subject: reponse candidature'...\n
         .. desole votre candidature ne nous interesse pas  '''
         self.smtpObj.sendmail(self.settings.email.get(),self.settings.mail_sender[0],positif_mail) 
-    def check_mails(self):
-        folders_list=self._list_folders()
-        folders_list_str="\n".join(folders_list)
-        rep_valid=False
-        while (not rep_valid):
-            response = input(""" choose one of thoose folders""" + str(folders_list_str))
-            if response in folders_list:
-                rep_valid=True
-                
+    
+    def get_next(self,):
+        self.settings.id_mail+=10
+        self.mail_header()
+    def get_prev(self):
+        self.settings.id_mail-=10
+        self.mail_header()
+            

@@ -16,4 +16,4 @@ class Settings:
         self.choosed_sub_folder = None
         self.mails_list = None
         self.mail_sender = None
-        
+        self.id_mail = None

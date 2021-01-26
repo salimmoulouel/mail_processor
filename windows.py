@@ -95,6 +95,9 @@ class Window:
         scrollbarx.config(command=self.settings.mails_list.xview)
         scrollbarx.grid(row=7,columnspan=2,sticky="swe")
         self.settings.mails_list.bind('<ButtonRelease-1>', self.program.mail_acessor.show_mail)
+        
+        ttk.Button(self.left_side, text="precedent", command=self.program.mail_acessor.get_prev).grid(column=0, row=8, sticky="nsew")
+        ttk.Button(self.left_side, text="suivant", command=self.program.mail_acessor.get_next).grid(column=1, row=8, sticky="nsew")
 
     def _right_side_instantiate(self):
         """ instantiation of the right side of main window"""
